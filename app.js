@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+var fs = require('fs');
 var express = require('express');
 var mongoose = require('mongoose')
 var path = require('path');
@@ -7,12 +8,41 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { response } = require('express');
 
 var app = express();
 
+function onRequest(req, res) {
+
+//   function fileReader(path, callback) {
+//     fs.readFile(path, (err, data) => {
+//         if (err) {
+//             callback(404);
+//         } else {
+//             callback(200, Buffer.from(data).toString('utf-8'));
+//         }
+//     })
+//     res.end()
+// }
+  response.writeHead(200,{'content-type':'text/html'});
+  fs.readFile('index.html', null, function(error,data){
+    if (error) {
+      console.log(error)
+      res.writeHead(400);
+      res.write('file not found');
+    } else{
+      // console.log(data)
+      res.write(data);
+      }
+    res.end();
+  });
+}
+
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,8 +50,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/', onRequest.bind(this));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
