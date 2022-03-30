@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const config = require('./_config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -61,11 +62,20 @@ app.use(function(req, res, next) {
 
 
 // Database Connection
-const dbConnectionString = 'mongodb://localhost/';
+// const dbConnectionString = 'mongodb://localhost/';
 const dbName = 'classwork';
-const MONGODB_URI = process.env.MONGODB_URI || dbConnectionString + dbName;
-mongoose.connect(MONGODB_URI)
+// const MONGODB_URI = process.env.MONGODB_URI || dbConnectionString + dbName;
+// mongoose.connect(MONGODB_URI)
 const db = mongoose.connection;
+
+const MONGODB_URI = process.env.MONGODB_URI || config.mongoURI[app.settings.env]
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true  },(err)=>{
+    if (err) {
+        console.log(err)
+    }else{
+        console.log(`Connected to Database: ${MONGODB_URI}`)
+    }
+});
 
 // Check Connection
 db.once('open', () => {
