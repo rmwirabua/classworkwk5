@@ -62,7 +62,7 @@ app.use(function(req, res, next) {
 
 
 // Database Connection
-// const dbConnectionString = 'mongodb://localhost/';
+const dbConnectionString = 'mongodb+srv://richardgitonga:1Quality@cluster0.igm2h.mongodb.net/classwork?retryWrites=true&w=majority';
 const dbName = 'classwork';
 // const MONGODB_URI = process.env.MONGODB_URI || dbConnectionString + dbName;
 // mongoose.connect(MONGODB_URI)
